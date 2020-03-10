@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "34106607180",
+    "firebase_url": "https://astonindoor.firebaseio.com",
+    "project_id": "astonindoor",
+    "storage_bucket": "astonindoor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34106607180:android:298225bf1abb81cdb016e9",
+        "android_client_info": {
+          "package_name": "com.example.astonindoor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34106607180-1hbn67c0jhhvskppo8juposjqtvouohg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.astonindoor",
+            "certificate_hash": "23c8ed9a81138b891aaf2ee15736e2a58719be6b"
+          }
+        },
+        {
+          "client_id": "34106607180-eoqpru2kma9b0lesd7bj1ug8vjoita9n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS4CsBC6wWL2fZSHtv1bdHNYo-6ZJeGow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34106607180-eoqpru2kma9b0lesd7bj1ug8vjoita9n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView
+
+        android:id="@+id/floorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/roomNumber"
+        android:layout_alignRight="@id/roomNumber"
+        android:layout_marginEnd="-37dp"
+        android:layout_marginRight="-37dp"
+        android:text="@string/line_1"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/roomNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/line_2"
+        android:textSize="20sp" />
+
+</RelativeLayout>
