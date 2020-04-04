@@ -16,7 +16,6 @@ public class roomList {
 
 
 
-
     }
     //
 //    public ArrayList<RoomImages>getAllImg(MapsActivity map, AppViewModel viewModel ){

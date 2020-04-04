@@ -29,15 +29,18 @@ import com.example.astonindoor.ImageProcessing.BitmapProcessing;
 import com.example.astonindoor.Models.RoomImages;
 import com.example.astonindoor.OldRoomDatabase.FloorMapView;
 import com.example.astonindoor.SearchBar.SearchListAdapter;
+import com.example.astonindoor.SearchBar.SearchMenuActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -50,8 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //class objects
     private BitmapProcessing imageProcess;
     private CameraIntent camIntent;
-    private  SearchListAdapter  sAdapter;
-    private AppViewModel allRooms;
+
 
     //Android and others
     private GoogleMap mMap;
@@ -59,8 +61,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private androidx.appcompat.widget.SearchView searchView;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private  AssetManager assetManager;
-    private RecyclerView searchBarList;
+
     private RecyclerView.LayoutManager rLayoutManager;
+    private RecyclerView searchBarList;
 
 
 
@@ -70,6 +73,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //FloorMapView mapView;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+       // setListInRecyclerView();
+
 
         pLayer = (RelativeLayout) findViewById(R.id.relLayer);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -85,30 +90,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         imageProcess = new BitmapProcessing();
 
 
-        goButton.setOnClickListener(listActive);
+        //goButton.setOnClickListener(listActive);
         assetManager = getAssets();
         String test ="";
 
         try {
             InputStream is = assetManager.open("image1.jpg");
             Bitmap bitmap = BitmapFactory.decodeStream(is);
-
             Bitmap bit = imageProcess.resizeImg(bitmap);
             Bitmap greyBit =imageProcess.changeToGrayScale(bit);
             int avarageColor = imageProcess.avarageColor(greyBit);
-
             String firstImghash = imageProcess.pHashing(greyBit, avarageColor);
             String secondImghash = imageProcess.pHashing(greyBit, avarageColor);
-
             test = imageProcess.compareImgHash(firstImghash,secondImghash);
-
             //String roomByImg = roomNo.getRoomByImg(firstImghash);
-
             Log.d("TAG",test );
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
 
 
@@ -126,66 +125,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        dbImages = new roomList();
 //        System.out.println("HEREEEEEEE"+  dbImages.getAllImg(this, allRooms).size());
 
-
-    }
-
-    private void setListInRecyclerView(){
-        searchBarList = (RecyclerView) findViewById(R.id.searchBar_list);
-        searchBarList.setHasFixedSize(true);// dont want to change the size of recylceview
-        rLayoutManager = new LinearLayoutManager(this);
-        sAdapter = new SearchListAdapter();
-        searchBarList.setAdapter(sAdapter);
-
-        allRooms = ViewModelProviders.of(this).get(AppViewModel.class);
-        allRooms.getLiveRoomImages().observe(this, new Observer<List<RoomImages>>() {
-            @Override
-            public void onChanged(List<RoomImages> roomImages) {
-                sAdapter.setSearchList(roomImages);
-                Log.d("Test", roomImages.get(2).getImage());
-
-            }
-        });
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_bar_menu, menu);
-
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchItem = menu.findItem(R.id.search_field);
-        SearchView searchView = (SearchView)searchItem.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                sAdapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-
-
-
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-
-    private View.OnClickListener listActive = new View.OnClickListener() {
+    private View.OnClickListener searchActivity = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(MapsActivity.this, RetrieveDb.class);
-               startActivityForResult(intent,1 );
+            Intent intent = new Intent(MapsActivity.this, SearchMenuActivity.class);
+               startActivity(intent);
         }
     };
+
+
+//    private View.OnClickListener listActive = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            Intent intent = new Intent(MapsActivity.this, RetrieveDb.class);
+//               startActivityForResult(intent,1 );
+//        }
+//    };
 
     private View.OnClickListener image = new View.OnClickListener() {
         @Override
@@ -212,6 +170,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         camIntent = new CameraIntent(this);
         camButton.setOnClickListener(camIntent.showCamera);// camera button event
         gpsButton.setOnClickListener(image);
+
+        goButton.setOnClickListener(searchActivity);
 
 
 
@@ -243,7 +203,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getFocusedBuilding();
         //mainBuilding.getLevels().get(mainBuilding.getActiveLevelIndex());
 
-
     }
 
     public static Bitmap getBitmapFromAsset(Context context, String filePath) throws IOException {
@@ -260,4 +219,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    public void showCamera(View view) {
+    }
 }

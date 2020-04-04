@@ -8,4 +8,5 @@
     <string name="app_label">app label</string>
     <string name="search_hint">Search Room</string>
     <string name="search_here">Search here</string>
+    <string name="search">Search</string>
 </resources>

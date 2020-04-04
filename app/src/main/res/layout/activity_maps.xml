@@ -89,42 +89,26 @@
             android:layout_toStartOf="@+id/search_btn"-->
 
 
-    <com.mancj.materialsearchbar.MaterialSearchBar
-        android:id="@+id/search_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+<!--    <com.miguelcatalan.materialsearchview.MaterialSearchView-->
+<!--        android:id="@+id/search_field"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="52dp"-->
 
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp"
-        android:textColor="#999999"
-        android:textSize="16sp"
-        android:autofillHints="@string/search_here"
-        tools:targetApi="o" />
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:layout_marginRight="20dp"-->
+<!--        android:autofillHints="@string/search_here"-->
+<!--        android:ems="10"-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchBar_list"
-        android:layout_width="360dp"
-        android:layout_height="616dp"
+<!--        android:inputType="textPersonName"-->
+<!--        android:paddingLeft="20dp"-->
+<!--        android:paddingTop="10dp"-->
+<!--        android:paddingRight="20dp"-->
+<!--        android:paddingBottom="10dp"-->
+<!--        android:textColor="#999999"-->
+<!--        android:textSize="16sp"-->
+<!--        tools:targetApi="o" />-->
 
-        android:layout_below="@+id/search_field"
-
-        android:layout_alignBottom="@id/map"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginRight="35dp"
-        android:layout_marginBottom="-11dp"
-        android:fadingEdge="horizontal" />
 
 </RelativeLayout>
 
