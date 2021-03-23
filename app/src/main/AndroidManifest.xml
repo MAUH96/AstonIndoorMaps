@@ -3,18 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.astonindoor">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"  />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:usesCleartextTraffic="true">
+
+
+
 <!--        <activity android:name=".RetrieveDb" />-->
         <activity
             android:name=".Image"
             android:label="@string/title_activity_image"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <!--
          android:label="@string/app_name"
 
@@ -39,6 +49,8 @@
 <!--        <activity android:name=".SearchBar.SearchableActivity" />-->
         <activity android:name=".SearchBar.SearchMenuActivity"
                 android:theme="@style/AppTheme"/>
+        <activity android:name=".Camera.CameraIntentActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
 
         <meta-data
