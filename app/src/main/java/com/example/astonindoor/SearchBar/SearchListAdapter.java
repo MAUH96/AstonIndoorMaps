@@ -10,15 +10,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.astonindoor.Models.RoomImages;
+import com.example.astonindoor.Models.FloorModel;
 import com.example.astonindoor.R;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.SearchViewHolder> implements Filterable {
-    private List<RoomImages> listOfRooms = new ArrayList<>(); //need to be changed
-    private List<RoomImages> fullListOfRooms; //this copy will have all the items
+    private List<FloorModel> listOfRooms = new ArrayList<>(); //need to be changed
+    private List<FloorModel> copyListOfRooms; //this copy will have all the items
     // the first list will be used to filter and remove and fullList will be used to add back
     //the removed items.x
 
@@ -29,11 +31,47 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
 
 
 
-    SearchListAdapter(List<RoomImages> listOfRooms, onRoomListener onRoomListener){
-        this.listOfRooms=listOfRooms;
-        fullListOfRooms= new ArrayList<>(listOfRooms); // new copye of arraylist above
+    SearchListAdapter(onRoomListener onRoomListener){
+
         this.onRoomListener=onRoomListener;
+
     }
+
+    public void setListOfRooms(List<FloorModel> listOfRooms){
+        this.listOfRooms=listOfRooms;
+        copyListOfRooms = new ArrayList<>(listOfRooms); // new copye of arraylist above
+
+    }
+    static class SearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        TextView roomNum;
+        TextView floorName;
+        onRoomListener onRoomListener;
+        SearchViewHolder(@NonNull View itemView){
+            super(itemView);
+        };
+
+        SearchViewHolder(@NonNull View itemView, onRoomListener onRoomListener) {
+            super(itemView);
+            roomNum = itemView.findViewById(R.id.roomNumber);
+            floorName = itemView.findViewById(R.id.floorName);
+
+            this.onRoomListener = onRoomListener;
+            itemView.setOnClickListener(this);
+        }
+
+
+
+        @Override
+        public void onClick(View v) {
+            try {
+                onRoomListener.onRoomClick(getAdapterPosition());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }//inner class finished
 
     @NonNull
     @Override
@@ -45,9 +83,9 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
 
     @Override
     public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
-        RoomImages currentItem = listOfRooms.get(position);
-        holder.floorName.setText(currentItem.getImage());
-        holder.roomNum.setText(currentItem.getImage());
+        FloorModel currentItem = listOfRooms.get(position);
+        holder.floorName.setText(currentItem.getNumRoom());
+        holder.roomNum.setText(currentItem.getRoomName());
     }
 
     @Override
@@ -64,7 +102,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<RoomImages> filteredList = new ArrayList<>(); // contains filtered items
+            List<FloorModel> filteredList = new ArrayList<>(); // contains filtered items
 
 
             /*
@@ -72,13 +110,14 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
              */
             if(constraint == null || constraint.length()==0){ // if input field is empty
                 //show the full list
-                filteredList.addAll(fullListOfRooms);
+                filteredList.addAll(copyListOfRooms);
 
             }else{
                 String searchedText = constraint.toString().toLowerCase().trim();
 
-                for(RoomImages item : fullListOfRooms){
-                    if(item.getImage().toLowerCase().contains(searchedText)){
+
+                for(FloorModel item : copyListOfRooms){
+                    if(item.getNumRoom().toLowerCase().contains(searchedText) || item.getRoomName().toLowerCase().contains(searchedText) ){
                         filteredList.add(item);
                     }
                 }
@@ -98,34 +137,15 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
 
     };
 
-    static class SearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView roomNum;
-        TextView floorName;
-        onRoomListener onRoomListener;
-
-        SearchViewHolder(@NonNull View itemView, onRoomListener onRoomListener) {
-            super(itemView);
-            roomNum = itemView.findViewById(R.id.roomNumber);
-            floorName = itemView.findViewById(R.id.floorName);
-
-            this.onRoomListener = onRoomListener;
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            onRoomListener.onRoomClick(getAdapterPosition());
-
-        }
-    }//inner class finished
 
     /**
      * interface detects the click
      * onRoomClick() is used to send the position of the clicked item
      */
     public interface onRoomListener{
-        void onRoomClick(int position);
+        void onRoomClick(int position) throws JSONException;
+
     }
 
 }
