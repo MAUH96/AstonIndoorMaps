@@ -1,41 +1,26 @@
     package com.example.astonindoor.SearchBar;
 
-    import android.content.Intent;
-    import android.os.Build;
     import android.os.Bundle;
-    import android.util.Log;
     import android.view.Menu;
     import android.view.MenuInflater;
     import android.view.MenuItem;
-    import android.view.View;
     import android.view.inputmethod.EditorInfo;
-    import android.widget.Toast;
 
     import androidx.annotation.Nullable;
     import androidx.appcompat.app.AppCompatActivity;
     import androidx.appcompat.widget.SearchView;
-    import androidx.lifecycle.Observer;
-    import androidx.lifecycle.ViewModelProviders;
     import androidx.recyclerview.widget.LinearLayoutManager;
     import androidx.recyclerview.widget.RecyclerView;
 
-    import com.example.astonindoor.Database.AppViewModel;
+
     //import com.example.astonindoor.Database.RoomsListService;
     import com.example.astonindoor.Database.RetrofitServiceBuilder;
-    import com.example.astonindoor.MapsActivity;
     import com.example.astonindoor.Models.FloorModel;
-    import com.example.astonindoor.Models.RoomImages;
     import com.example.astonindoor.R;
-    import com.example.astonindoor.SearchBar.SearchListAdapter.SearchViewHolder;
-    import com.google.gson.JsonObject;
-    import com.google.gson.JsonParser;
 
     import org.jetbrains.annotations.NotNull;
     import org.json.JSONException;
-    import org.json.JSONObject;
 
-    import java.util.ArrayList;
-    import java.util.Arrays;
     import java.util.HashMap;
     import java.util.List;
 
@@ -47,7 +32,7 @@
 
         private RecyclerView searchBarList;
         private  SearchListAdapter  sAdapter;
-        private AppViewModel allRooms;
+        //private AppViewModel allRooms;
         private List<FloorModel>roomList;
         private Call<String> postToServer;
 
@@ -64,27 +49,9 @@
 
         }
 
-//        public void retrieveRoomDb(){
-//            allRooms.getLiveRoomImages().observe(this, new Observer<List<RoomImages>>() {
-//
-//                @Override
-//                public void onChanged(List<RoomImages> roomImages) {
-//                       if(!mRoomImages.isEmpty()){
-//                           mRoomImages.addAll(roomImages);
-//
-//                           sAdapter.notifyDataSetChanged();
-//
-//                       }
-//
-//                    }
-//
-//            });
-//
-//        }
-
-
-
-
+        /**
+         * Set destination room list by retireving all the rooms from the database
+         */
         private void setListInRecyclerView(){
 
             //            allRooms = ViewModelProviders.of(this).get(AppViewModel.class);
@@ -96,8 +63,6 @@
             searchBarList.setHasFixedSize(true);// dont want to change the size of recylceview
             searchBarList.setLayoutManager(layoutManager);
             sAdapter = new SearchListAdapter(this); // this refer to onRoomListener interface
-
-
 
             serverReqsCall = RetrofitServiceBuilder.getInstance().getRoomListService().getRoomList();
             serverReqsCall.enqueue(new Callback<List<FloorModel>>() {
@@ -113,16 +78,8 @@
 
                         //Toast.makeText(SearchMenuActivity.this, s, Toast.LENGTH_LONG).show();
 
-
-
-
-
                     }
 
-//                        List<String> rooms = new ArrayList<>();
-//                    for (int i = 0; i < roomList.size(); i++) {
-//                        rooms.add(roomList.get(i).getRoom1());
-//                    }
 
                 }
 
@@ -142,11 +99,7 @@
 //                }
 //            });
 
-
-
-
         }
-
 
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,12 +130,12 @@
         @Override
         public void onRoomClick(final int position) throws JSONException {
 
-            String currentRoomNum = roomList.get(position).getNumRoom();
-            HashMap<String,String> currentPosition = new HashMap<>();
-            currentPosition.put("numRoom",""+currentRoomNum.toString());
-            System.out.println(currentPosition);
+            String destinationRoomNum = roomList.get(position).getNumRoom();
+            HashMap<String,String> destinationRoom = new HashMap<>();
+            destinationRoom.put("numRoom",""+destinationRoomNum);
+            System.out.println(destinationRoom);
             postToServer = RetrofitServiceBuilder.getInstance().getRoomListService()
-                    .sendCurrentPos(currentPosition);
+                    .sendDestinationRoom(destinationRoom);
             postToServer.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rel"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/maps_activity"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MapsActivity">
 
@@ -10,13 +13,10 @@
 
     <ImageView
         android:id="@+id/tryImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:adjustViewBounds="true"
-        android:src="@drawable/image1"
-
-        />
+        android:scaleType="centerInside" />
 
     <ImageButton
         android:id="@+id/TrackMe"
@@ -42,8 +42,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="22dp"
-        android:background="@drawable/gps"
-        android:onClick="showCamera">
+        android:background="@drawable/gps">
 
 
     </ImageButton>
@@ -58,5 +57,12 @@
         android:background="@drawable/gps">
 
     </ImageButton>
+    <androidx.fragment.app.FragmentContainerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:name="com.example.astonindoor.CurrentPBox"
+        android:id="@+id/fragment_cont"/>
 
 </RelativeLayout>

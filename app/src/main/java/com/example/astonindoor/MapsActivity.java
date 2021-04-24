@@ -1,32 +1,50 @@
 package com.example.astonindoor;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.example.astonindoor.Camera.CameraIntentActivity;
-import com.example.astonindoor.Database.AppViewModel;
-import com.example.astonindoor.ImageProcessing.BitmapProcessing;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+//import com.example.astonindoor.Database.AppViewModel;
+
+import com.example.astonindoor.Database.RetrofitServiceBuilder;
+import com.example.astonindoor.Models.FloorModel;
 import com.example.astonindoor.Models.RoomImages;
 import com.example.astonindoor.SearchBar.SearchMenuActivity;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -35,13 +53,24 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -52,7 +81,6 @@ public class MapsActivity extends AppCompatActivity {
     private ImageButton camButton;
 
     //class objects
-    private BitmapProcessing imageProcess;
     //private CameraIntent camIntent;
 
 
@@ -66,33 +94,89 @@ public class MapsActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager rLayoutManager;
     private RecyclerView searchBarList;
     private ImageView mapImage;
+    private AutoCompleteTextView currentPos;
+    private  String MAP_LINK;
+    private Canvas canvas;
+    private List<FloorModel>roomList;
+    Call<List<FloorModel>>serverReqsCall;
 
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //FloorMapView mapView;
+        CurrentPBox currentPBox = new CurrentPBox();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_activity);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_cont, CurrentPBox.class, null)
+                    .commit();
+        }
 
-
+        MAP_LINK = "https://firebasestorage.googleapis.com/v0/b/astonindoor.appspot.com/o/1%2FMB%202nd%20Floor%20Rev%20Q-1.jpg?alt=media&token=1f5cfdb0-bccb-40e2-9a27-9c0418e8992c"    ;
         gpsButton = (ImageButton) findViewById(R.id.TrackMe);
         goButton = (ImageButton) findViewById(R.id.GoButton);
         camButton = (ImageButton) findViewById(R.id.CameraButton);
+        mapImage = (ImageView) findViewById(R.id.tryImage);
 
 
+/**
+ * design path
+ */
+        Glide.with(getApplicationContext())
+                .asBitmap()
+                .load(MAP_LINK)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        resource = Bitmap.createBitmap(resource);
+                        canvas = new Canvas(resource);
 
-    /**
-    * NEEDED WHEN DATABASE ADDED
-    */
-//        allRooms = ViewModelProviders.of(this).get(AppViewModel.class);
-//        dbImages = new roomList();
-//        System.out.println("HEREEEEEEE"+  dbImages.getAllImg(this, allRooms).size());
+                        Paint drawPaint = new Paint();
 
+                        drawPaint.setColor(Color.RED);
+                        //drawPaint.setAntiAlias(true);
+                        drawPaint.setStrokeWidth(20);
+                        drawPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                        drawPaint.setStrokeJoin(Paint.Join.ROUND);
+                        drawPaint.setStrokeCap(Paint.Cap.ROUND);
+
+                        Path path = new Path();
+                        path.moveTo(128, 648);
+                        path.lineTo(119, 883);
+                        path.close();
+                        //canvas.scale(mapImage.getWidth(),mapImage.getHeight());
+                        canvas.drawPath(path, drawPaint);
+
+
+                        //mapImage.setScaleY(canvas.getHeight());
+                        //mapImage.setScaleX(canvas.getWidth());
+                        mapImage.setImageBitmap(resource);
+
+
+                    }
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+        mapImage.setOnTouchListener((view, motionEvent) -> {
+
+            final float x = motionEvent.getX();
+            final float y = motionEvent.getY();
+            float lastXAxis = x;
+            float lastYAxis = y;
+            System.out.println("X coord ="+ Float.toString(lastXAxis) +" " + "Y coord= " +Float.toString(lastYAxis));
+
+            return true;
+        });
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         ArrayList<String> permissionsToRequest = new ArrayList<>();
         for (int i = 0; i < grantResults.length; i++) {
             permissionsToRequest.add(permissions[i]);
@@ -105,22 +189,7 @@ public class MapsActivity extends AppCompatActivity {
         }
     }
 
-    private void requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted
-                permissionsToRequest.add(permission);
-            }
-        }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
+
 
     private View.OnClickListener searchActivity = new View.OnClickListener() {
         @Override
@@ -139,29 +208,6 @@ public class MapsActivity extends AppCompatActivity {
         }
     };
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//
-//
-//            viewModel.getLiveRoomImages().observe(this, new Observer<List<RoomImages>>() {
-//                @Override
-//                public void onChanged(List<RoomImages> roomImages) {
-//                    try {
-//                        //you will loop to and try all the links: --> it would be faster if you ask user on which floor he is
-//                        // (only if is too slow with searching)
-//                        getStorageImage(roomImages.get(0));
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
-//
-//
-//        }
-//    }
 
 
     @Override
@@ -172,119 +218,54 @@ public class MapsActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-  /**  @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-
-        // Add a marker aston Uni
-
-        LatLng astonFloor0 = new LatLng(52.486860, -1.890165);
-
-
-        mMap.addMarker(new MarkerOptions().position(astonFloor0).title("Entrance "));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(astonFloor0, 20));
-        mMap.getFocusedBuilding();
-        //mainBuilding.getLevels().get(mainBuilding.getActiveLevelIndex());
-
-    }**/
-
-//    public static Bitmap getBitmapFromAsset(Context context, String filePath) throws IOException {
-//        AssetManager assetManager = context.getAssets();
-//
-//        InputStream istr;
-//        Bitmap bitmap ;
-//
-//        istr = assetManager.open(filePath);
-//        bitmap = BitmapFactory.decodeStream(istr);
-//
-//        return bitmap;
-//    }
-
-    public void showCamera(View view) {
-    }
-//    public void getStorageImage( RoomImages imageUrl) throws IOException {
-//
-//        StorageReference imagePath = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl.getImage());
-//
-//        final File localFile = File.createTempFile("images", "jpg");
-//        imagePath.getFile(localFile)
-//                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                        // Successfully downloaded data to local file
-//                        // ..
-//
-//
-//                        //Get user take picture
-//                        Bitmap imageUser = BitmapFactory.decodeFile(camIntent.getCurrentPhotoPath());
-//
-//                        Bitmap smallerUserPic = imageProcess.resizeImg(imageUser);
-//                        Bitmap grayUserPic = imageProcess.changeToGrayScale(smallerUserPic);
-//
-//                        //get DBfile
-//                        Bitmap imageDB = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-//                        Bitmap smallerImgDB = imageProcess.resizeImg(imageDB); //imageProcess class method to reduce the img
-//                        Bitmap grayImgDB = imageProcess.changeToGrayScale(smallerImgDB); //imageProcess (class) to turn img in grayscale
-//                        // simpleImageViewLion.setImageBitmap(greyBit); //set the image in the front-end view of the app
-//                        //Glide.with(context).load(grayBit).into(simpleImageViewLion);
-//
-//                        //hash both of em
-//                        int avrageRgbImgDb = imageProcess.avarageColor(grayImgDB);
-//                        int avarageRgbImgUser = imageProcess.avarageColor(grayUserPic);
-//                        String hashedDbImg = imageProcess.pHashing(grayImgDB,avrageRgbImgDb);
-//                        String hashedUserImg = imageProcess.pHashing(grayUserPic,avarageRgbImgUser);
-//
-//                        //compare them
-//                        if(imageProcess.compareImgHash(hashedUserImg,hashedDbImg)){
-//
-//                            finishActivity(REQUEST_IMAGE_CAPTURE);
-//
-//                            Toast.makeText(getApplicationContext(),"SAMEEE IMAGEEE!!!",Toast.LENGTH_LONG).show();
-//                            Log.d("TAGggggggggggggg", "SAMEEE IMAGEEE");
-//
-//                        }else{
-//                            Toast.makeText(getApplicationContext(),"NOT SAME IMAGEEEEEEE",Toast.LENGTH_LONG).show();
-//                            Log.d("TAGggggggg", "NOT SAME IMAGEEE");
-//
-//                        }
-//
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                // Handle failed download
-//                // ...
-//            }
-//        });
-//    }
 
     @Override
     public void onResume() {
         super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        //map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-//        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+
+    }
+    public AutoCompleteTextView populateTextBox(Context context){
+
+
+        serverReqsCall = RetrofitServiceBuilder.getInstance().getRoomListService().getRoomList();
+        serverReqsCall.enqueue(new Callback<List<FloorModel>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<FloorModel>> call, @NotNull Response<List<FloorModel>> response) {
+                System.out.println("response code: " + response.code());
+                ArrayList<String> roomNames = new ArrayList<>();
+                if (response.code() == 200) {
+
+                    roomList = response.body();
+                    for (FloorModel s : roomList) {
+                        roomNames.add(s.getNumRoom());
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                            (context, android.R.layout.select_dialog_item, roomNames);
+
+                    currentPos = (AutoCompleteTextView) findViewById(R.id.currentPostion);
+                    currentPos.setThreshold(1);//will start working from first character
+                    currentPos.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+
+
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<FloorModel>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+        return currentPos;
     }
 }
+
+
+
+

@@ -1,0 +1,10 @@
+<AutoCompleteTextView android:id="@+id/currentPostion"
+    android:layout_width="50mm"
+    android:layout_height="10mm"
+    android:backgroundTint="@color/cardview_light_background"
+    android:ems="2"
+    android:hint="enter your nearest room"
+    android:text=""
+    xmlns:android="http://schemas.android.com/apk/res/android" />
+
+

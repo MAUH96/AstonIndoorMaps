@@ -26,7 +26,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
 
     private onRoomListener onRoomListener;
 
-    private static int lastPositionChecked = -1; // -1 no position selected by default
+   // private static int lastPositionChecked = -1; // -1 no position selected by default
     //0 there is a first default selection
 
 

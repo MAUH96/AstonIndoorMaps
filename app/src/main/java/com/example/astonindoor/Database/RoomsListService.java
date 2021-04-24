@@ -18,6 +18,9 @@ public interface RoomsListService {
     @GET("rooms")
     Call<List<FloorModel>> getRoomList();
 
+    @POST("destinationRoom")
+    Call<String> sendDestinationRoom(@Body HashMap<String,String> currentPos);
+
     @POST("currentPosition")
-    Call<String>sendCurrentPos(@Body HashMap<String,String> currentPos);
+    Call<String> sendCurrentPosition(@Body HashMap<String,String> currentPos);
 }

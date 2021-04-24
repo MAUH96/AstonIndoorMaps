@@ -38,7 +38,5 @@ public class RetrofitServiceBuilder {
         return roomListService;
     }
 
-    public RoomsListService sendCurrentPosition() {
-        return roomListService;
-    }
+
 }
