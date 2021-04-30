@@ -1,27 +1,37 @@
 package com.example.astonindoor.Models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class RoomModel {
 
-    private int roomNo;
-    private String longitude, latitude;
+    @SerializedName("numRoom")
+    @Expose
+    private String numRoom;
 
-    public RoomModel(int roomNo, String longitude, String latitude){
-        this.roomNo=roomNo;
+    @SerializedName("roomName")
+    @Expose
+    private String roomName;
 
-        this.longitude=longitude;
-        this.latitude=latitude;
+    @SerializedName("x")
+    private String x;
+    @SerializedName("y")
+    private String y;
+
+    public String getNumRoom() {
+        return numRoom;
     }
 
-    public int getRoomNo() {
-        return roomNo;
+    public String getRoomName() {
+        return roomName;
     }
 
-
-    public String getLongitude() {
-        return longitude;
+    public String getX() {
+        return x;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getY() {
+        return y;
     }
+
 }
