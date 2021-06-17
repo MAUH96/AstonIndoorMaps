@@ -1,5 +1,6 @@
 package com.example.astonindoor.SearchBar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +10,7 @@ import android.view.inputmethod.EditorInfo;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,13 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 //import com.example.astonindoor.Database.RetrofitService.RoomsListService;
+import com.example.astonindoor.Database.ViewModel.CurrentRoomViewModel;
 import com.example.astonindoor.Database.ViewModel.DestinationRoomViewModel;
+import com.example.astonindoor.MapsActivity;
 import com.example.astonindoor.Models.RoomModel;
+import com.example.astonindoor.NavMapFragment;
 import com.example.astonindoor.R;
 
 import org.json.JSONException;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 
@@ -43,6 +49,8 @@ public class SearchMenuActivity extends AppCompatActivity implements SearchListA
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity);
+        roomViewModel = new ViewModelProvider(this).get(DestinationRoomViewModel.class);
+
         setListInRecyclerView();
 
     }
@@ -51,7 +59,6 @@ public class SearchMenuActivity extends AppCompatActivity implements SearchListA
      * Set destination room list by retireving all the rooms from the database
      */
     private void setListInRecyclerView() {
-        roomViewModel = new ViewModelProvider(this).get(DestinationRoomViewModel.class);
 
         searchBarList = (RecyclerView) findViewById(R.id.searchBar_list);
 
@@ -103,6 +110,12 @@ public class SearchMenuActivity extends AppCompatActivity implements SearchListA
     public void onRoomClick(final int position) throws JSONException {
 
         roomViewModel.sendToServer(position);
+
+//        NavMapFragment fragment = new NavMapFragment();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.maps_activity, fragment);
+//        transaction.commit();
+
     }
 
 }

@@ -11,7 +11,10 @@ import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,6 +23,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.example.astonindoor.Camera.CameraIntentActivity;
@@ -28,6 +35,7 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 //import com.example.astonindoor.Database.AppViewModel;
 
+import com.example.astonindoor.Database.ViewModel.CurrentRoomViewModel;
 import com.example.astonindoor.Models.RoomModel;
 import com.example.astonindoor.SearchBar.SearchMenuActivity;
 import com.google.firebase.storage.StorageReference;
@@ -45,7 +53,8 @@ public class MapsActivity extends AppCompatActivity {
     //buttons
     private ImageButton gpsButton;
     private ImageButton goButton;
-    private ImageButton camButton;
+    private ImageButton startNavigation;
+    private CurrentRoomViewModel currentRoomViewModel;
 
     //class objects
     //private CameraIntent camIntent;
@@ -61,11 +70,13 @@ public class MapsActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager rLayoutManager;
     private RecyclerView searchBarList;
     private ImageView mapImage;
-    private AutoCompleteTextView currentPos;
     private  String MAP_LINK;
     private Canvas canvas;
     private List<RoomModel>roomList;
     Call<List<RoomModel>>serverReqsCall;
+    private String isValid;
+    AutoCompleteTextView currentPos;
+
 
 
 
@@ -73,26 +84,62 @@ public class MapsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //FloorMapView mapView;
-        CurrentPBox currentPBox = new CurrentPBox();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_activity);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_cont, CurrentPBox.class, null)
-                    .commit();
-        }
+        MAP_LINK = "https://firebasestorage.googleapis.com/v0/b/astonindoor.appspot.com/o/1%2FMB%202nd%20Floor%20Rev%20Q-1.jpg?alt=media&token=1f5cfdb0-bccb-40e2-9a27-9c0418e8992c"    ;
+
+
+        currentRoomViewModel = new ViewModelProvider(this).get(CurrentRoomViewModel.class);
 
         MAP_LINK = "https://firebasestorage.googleapis.com/v0/b/astonindoor.appspot.com/o/1%2FMB%202nd%20Floor%20Rev%20Q-1.jpg?alt=media&token=1f5cfdb0-bccb-40e2-9a27-9c0418e8992c"    ;
-        gpsButton = (ImageButton) findViewById(R.id.TrackMe);
+        //gpsButton = (ImageButton) findViewById(R.id.TrackMe);
         goButton = (ImageButton) findViewById(R.id.GoButton);
-        camButton = (ImageButton) findViewById(R.id.CameraButton);
+        startNavigation = (ImageButton) findViewById(R.id.CameraButton);
         mapImage = (ImageView) findViewById(R.id.tryImage);
+        currentPos = (AutoCompleteTextView) findViewById(R.id.currentPostion);
 
 
-/**
- * design path
- */
+
+        currentRoomViewModel= new ViewModelProvider(this).get(CurrentRoomViewModel.class);
+
+
+        currentRoomViewModel.getAllRoomNumbers().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> strings) {
+//                ArrayList<String> roomNames = new ArrayList<>();
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                        (MapsActivity.super.getApplicationContext(), android.R.layout.simple_dropdown_item_1line, strings);
+                currentPos.setThreshold(1);//will start working from first character
+                currentPos.setAdapter(adapter);//setting the adapter data into the
+                currentPos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String currentPosition = parent.getItemAtPosition(position).toString();
+                        currentRoomViewModel.sendToServer(currentPosition);
+
+                        Intent intent = new Intent(MapsActivity.this, SearchMenuActivity.class);
+                        startActivity(intent);
+
+                        System.out.println("CurrentPositon " + currentPosition );
+                        //isSelected=true;
+
+
+
+
+                    }
+                });
+
+            }
+        });
+
+        currentPos.setVisibility(View.INVISIBLE);
+
+
+        /**
+         * design path
+         */
         Glide.with(getApplicationContext())
                 .asBitmap()
                 .load(MAP_LINK)
@@ -139,7 +186,8 @@ public class MapsActivity extends AppCompatActivity {
 
             return true;
         });
-    }
+        }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -159,19 +207,42 @@ public class MapsActivity extends AppCompatActivity {
 
 
     private View.OnClickListener searchActivity = new View.OnClickListener() {
+
         @Override
         public void onClick(View v) {
+
             Intent intent = new Intent(MapsActivity.this, SearchMenuActivity.class);
-               startActivity(intent);
+                startActivity(intent);
+
         }
     };
 
 
-    private View.OnClickListener image = new View.OnClickListener() {
+    private View.OnClickListener currentPosTextBox = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //Intent intent = new Intent(MapsActivity.this, CameraIntentActivity.class);
-           //startActivity(intent);
+
+            currentPos.setVisibility(View.VISIBLE);
+            v.setVisibility(View.GONE);
+            goButton.setVisibility(View.VISIBLE);
+            goButton.setOnClickListener(searchActivity);
+
+
+
+            // boolean running = true;
+            boolean isSelected = Boolean.parseBoolean(currentRoomViewModel.isValid());
+            System.out.println(isSelected);
+//            while(running) {
+//                if (isSelected) {
+//                    transaction.setReorderingAllowed(true)
+//                            .remove(currentPBox)
+//                            .commit();
+//
+//                    running = false;
+//                }
+//            }
+
+
         }
     };
 
@@ -180,8 +251,8 @@ public class MapsActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        gpsButton.setOnClickListener(image);
-        goButton.setOnClickListener(searchActivity);
+        goButton.setVisibility(View.INVISIBLE);
+        startNavigation.setOnClickListener(currentPosTextBox);
 
     }
 
@@ -196,38 +267,7 @@ public class MapsActivity extends AppCompatActivity {
         super.onPause();
 
     }
-//    public AutoCompleteTextView populateTextBox(Context context){
-//
-//
-//        serverReqsCall = RetrofitServiceBuilder.getInstance().getRoomListService().getRoomList();
-//        serverReqsCall.enqueue(new Callback<List<RoomModel>>() {
-//            @Override
-//            public void onResponse(@NotNull Call<List<RoomModel>> call, @NotNull Response<List<RoomModel>> response) {
-//                System.out.println("response code: " + response.code());
-//                ArrayList<String> roomNames = new ArrayList<>();
-//                if (response.code() == 200) {
-//
-//                    roomList = response.body();
-//                    for (RoomModel s : roomList) {
-//                        roomNames.add(s.getNumRoom());
-//                    }
-//                    ArrayAdapter<String> adapter = new ArrayAdapter<String>
-//                            (context, android.R.layout.select_dialog_item, roomNames);
-//
-//                    currentPos = (AutoCompleteTextView) findViewById(R.id.currentPostion);
-//                    currentPos.setThreshold(1);//will start working from first character
-//                    currentPos.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<RoomModel>> call, Throwable t) {
-//                t.printStackTrace();
-//            }
-//        });
-//
-//        return currentPos;
-//    }
+
+
+
 }

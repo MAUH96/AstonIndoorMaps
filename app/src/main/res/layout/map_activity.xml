@@ -18,22 +18,6 @@
         android:adjustViewBounds="true"
         android:scaleType="centerInside" />
 
-    <ImageButton
-        android:id="@+id/TrackMe"
-        android:layout_width="61dp"
-        android:layout_height="59dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="91dp"
-        android:layout_marginBottom="22dp"
-        android:background="@drawable/gps"
-        android:cropToPadding="false"
-        android:layerType="none"
-        android:longClickable="false"
-        android:contentDescription="TODO"
-        android:layout_marginStart="91dp">
-
-
-    </ImageButton>
 
     <ImageButton
         android:id="@+id/CameraButton"
@@ -57,12 +41,12 @@
         android:background="@drawable/gps">
 
     </ImageButton>
-    <androidx.fragment.app.FragmentContainerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+
+    <AutoCompleteTextView android:id="@+id/currentPostion"
+        android:layout_width="50mm"
+        android:layout_height="8mm"
         android:layout_centerInParent="true"
-        android:name="com.example.astonindoor.CurrentPBox"
-        android:id="@+id/fragment_cont"/>
+        />
+
 
 </RelativeLayout>
