@@ -1,8 +1,7 @@
 package com.example.astonindoor.Database.RetrofitService;
 
-import com.example.astonindoor.Models.RoomModel;
-import com.example.astonindoor.Models.RoomWrapper;
-import com.example.astonindoor.Models.ValidationClass;
+import com.example.astonindoor.Database.Models.PathModel;
+import com.example.astonindoor.Database.Models.RoomModel;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +14,9 @@ import retrofit2.http.POST;
 public interface RoomsListService {
     @GET("rooms")
     Call<List<RoomModel>> getRoomList();
+
+    @GET("pathCoordinates")
+    Call<List<PathModel>>getXYcoordinates();
 
     @GET("isSelected")
     Call<String> getValidation();

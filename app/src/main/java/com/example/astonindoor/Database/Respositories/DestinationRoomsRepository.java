@@ -1,10 +1,14 @@
 package com.example.astonindoor.Database.Respositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 
 import com.example.astonindoor.Database.RetrofitService.RetrofitServiceBuilder;
-import com.example.astonindoor.Models.RoomModel;
+import com.example.astonindoor.Database.Models.PathModel;
+import com.example.astonindoor.Database.Models.RoomModel;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,11 +19,15 @@ import retrofit2.Response;
 
 public class DestinationRoomsRepository {
     // private RoomModel users = new ArrayList<>();
-    private MutableLiveData<List<String>> liveRoomNum = new MutableLiveData<List<String>>();
+    private MutableLiveData<List<PathModel>> livePathCoordinates = new MutableLiveData<List<PathModel>>();
     private MutableLiveData<List<RoomModel>> liveRoomNode = new MutableLiveData<List<RoomModel>>();
     private List<RoomModel> roomList;
+    private List<PathModel>pathCoordinates;
 
-
+    /**
+     * Get the list of destination rooms from the server
+     * @return
+     */
     public MutableLiveData<List<RoomModel>> getLiveRoomNode() {
         RetrofitServiceBuilder apiService = RetrofitServiceBuilder.getInstance();
         Call<List<RoomModel>> call = apiService.getRoomListService().getRoomList();
@@ -41,6 +49,11 @@ public class DestinationRoomsRepository {
         return liveRoomNode;
 
     }
+
+    /**
+     * send the destination room chosen back to the server
+     * @param position
+     */
 
     public void sendToServer(int position) {
 
@@ -69,4 +82,8 @@ public class DestinationRoomsRepository {
             }
         });
     }
+
+
+
+
 }

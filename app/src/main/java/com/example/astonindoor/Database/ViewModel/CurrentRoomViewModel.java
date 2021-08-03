@@ -19,6 +19,11 @@ public class CurrentRoomViewModel extends ViewModel {
         roomRepository = new CurrentRoomRepository();
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+    }
+
     public MutableLiveData<List<String>> getAllRoomNumbers() {
         return roomRepository.getLiveRoomNum();
     }
@@ -26,7 +31,7 @@ public class CurrentRoomViewModel extends ViewModel {
     public void sendToServer(String selectedRoom) {
         roomRepository.sendToServer(selectedRoom);
     }
-    public String isValid(){
+    public MutableLiveData<List<String>>isValid(){
         return roomRepository.isSelected();
     }
 }

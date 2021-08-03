@@ -3,7 +3,7 @@ package com.example.astonindoor.Database.Respositories;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.astonindoor.Database.RetrofitService.RetrofitServiceBuilder;
-import com.example.astonindoor.Models.RoomModel;
+import com.example.astonindoor.Database.Models.RoomModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,8 @@ import retrofit2.Response;
 public class CurrentRoomRepository {
     // private RoomModel users = new ArrayList<>();
     private MutableLiveData<List<String>> liveRoomNum = new MutableLiveData<List<String>>();
-    private String isValid;
+    private MutableLiveData<List<String>> isValid= new MutableLiveData<>();
+    private MutableLiveData<String> validationValue= new MutableLiveData<>();
 
 
 
@@ -79,16 +80,18 @@ public class CurrentRoomRepository {
 
 
 
-    public String isSelected() {
+    public MutableLiveData<List<String>>isSelected() {
         RetrofitServiceBuilder apiService = RetrofitServiceBuilder.getInstance();
         Call<String> call = apiService.getRoomListService().getValidation();
-
+        List<String> temp = new ArrayList<>();
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String res = response.body();
+                temp.add(res);
+                isValid.setValue(temp);
 
-                isValid=res;
+
             }
 
             @Override
@@ -96,6 +99,7 @@ public class CurrentRoomRepository {
 
             }
         });
+
 
         return isValid;
     }

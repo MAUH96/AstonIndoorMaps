@@ -3,8 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/activity_next_floor_nav2.xml" value="0.17798913043478262" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/content_image.xml" value="0.17798913043478262" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/content_next_floor_nav.xml" value="0.17798913043478262" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/db_test.xml" value="0.18802083333333333" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/fragment_second.xml" value="0.17798913043478262" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/main_activity.xml" value="0.161231884057971" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/map_activity.xml" value="0.10989583333333333" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/navigation_map1.xml" value="0.18020833333333333" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/search_activity.xml" value="0.12047101449275362" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/searchbar_list.xml" value="0.12047101449275362" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/menu/nav_search_bar.xml" value="0.14791666666666667" />
       </map>
     </option>
   </component>
