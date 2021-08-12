@@ -15,12 +15,16 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to place flags represented by Pin Class on the image at specific
+ * X and Y point.
+ *
+ * refrence: https://github.com/davemorrissey/subsampling-scale-image-view/blob/master/sample/src/main/java/com/davemorrissey/labs/subscaleview/test/extension/views/PinView.java
+ */
+
 public class PinsView extends SubsamplingScaleImageView  {
     private final Paint paint = new Paint();
-    private final PointF vPin = new PointF();
     private OnPinClickListener onPinClickListener;
-    private PointF sPin;
-    private Bitmap pin;
     private List<Pin> pinList;
 
     public PinsView(Context context) {
@@ -52,6 +56,10 @@ public class PinsView extends SubsamplingScaleImageView  {
         onPinClickListener = listener;
     }
 
+    /**
+     * Drawing the flag/pin on x and y coordinate
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -70,6 +78,10 @@ public class PinsView extends SubsamplingScaleImageView  {
         }
     }
 
+    /**
+     * Uses GestureDetector and the height and width of image of the flag/pin to define the touch on flag.
+     * onPinClickListener interface is being used so the click outcome can be defined in different classes
+     */
     private void initTouchListener() {
         GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override

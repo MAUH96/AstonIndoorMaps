@@ -16,7 +16,7 @@ public class PathModel {
 
     @SerializedName("roomNum")
     @Expose
-    private List<String> roomNum = null;
+    private final List<String> roomNum = null;
 
 
 

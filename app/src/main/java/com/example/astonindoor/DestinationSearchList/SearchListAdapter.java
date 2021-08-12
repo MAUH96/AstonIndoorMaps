@@ -24,7 +24,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
     // the first list will be used to filter and remove and fullList will be used to add back
     //the removed items.x
 
-    private onRoomListener onRoomListener;
+    private final onRoomListener onRoomListener;
 
     // private static int lastPositionChecked = -1; // -1 no position selected by default
     //0 there is a first default selection
@@ -51,8 +51,6 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
         SearchViewHolder(@NonNull View itemView) {
             super(itemView);
         }
-
-        ;
 
         SearchViewHolder(@NonNull View itemView, onRoomListener onRoomListener) {
             super(itemView);
@@ -99,7 +97,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
         return listFilter;
     }
 
-    private Filter listFilter = new Filter() {
+    private final Filter listFilter = new Filter() {
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {

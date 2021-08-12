@@ -6,5 +6,5 @@ public interface OnPinClickListener {
 
 
 
-    public void onPinClick(Pin pin);
+    void onPinClick(Pin pin);
 }

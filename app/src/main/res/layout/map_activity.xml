@@ -7,6 +7,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#F4F4F4"
     >
 
 
@@ -20,31 +21,24 @@
 
 
     <ImageButton
-        android:id="@+id/CameraButton"
-        android:layout_width="61dp"
-        android:layout_height="59dp"
+        android:id="@+id/CurrentPostionButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="22dp"
-        android:background="@drawable/gps">
-
-
+        android:outlineSpotShadowColor="@color/cardview_dark_background"
+        android:background="@android:drawable/ic_menu_directions">
     </ImageButton>
 
-    <ImageButton
-        android:id="@+id/GoButton"
-        android:layout_width="61dp"
-        android:layout_height="59dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="258dp"
-        android:layout_marginBottom="22dp"
-        android:background="@drawable/gps">
 
-    </ImageButton>
 
     <AutoCompleteTextView android:id="@+id/currentPostion"
         android:layout_width="50mm"
         android:layout_height="8mm"
+        android:hint="Enter you nearest room"
+        android:background="@drawable/border_darker"
+        android:shadowColor="@color/cardview_dark_background"
         android:layout_centerInParent="true"
         />
 

@@ -3,6 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.23692307692307693" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/drawable/border_background.xml" value="0.18333333333333332" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/drawable/border_darker.xml" value="0.18333333333333332" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/drawable/circle_button.xml" value="0.23692307692307693" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/drawable/directions_border.xml" value="0.23692307692307693" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/drawable/ic_launcher_background.xml" value="0.23692307692307693" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/drawable/ic_search_button.xml" value="0.23692307692307693" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/activity_next_floor_nav2.xml" value="0.17798913043478262" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/content_image.xml" value="0.17798913043478262" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/content_next_floor_nav.xml" value="0.17798913043478262" />
@@ -10,7 +17,8 @@
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/fragment_second.xml" value="0.17798913043478262" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/main_activity.xml" value="0.161231884057971" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/map_activity.xml" value="0.10989583333333333" />
-        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/navigation_map1.xml" value="0.18020833333333333" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/navigation_map1.xml" value="0.22" />
+        <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/next_floor_activity.xml" value="0.13768115942028986" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/search_activity.xml" value="0.12047101449275362" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/layout/searchbar_list.xml" value="0.12047101449275362" />
         <entry key="..\:/university/Third Year/Camera Based app/Project/app/src/main/res/menu/nav_search_bar.xml" value="0.14791666666666667" />

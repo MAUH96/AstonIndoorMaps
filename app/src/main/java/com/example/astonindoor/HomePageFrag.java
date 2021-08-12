@@ -4,13 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.astonindoor.Database.ViewModel.CurrentRoomViewModel;
-import com.example.astonindoor.DestinationSearchList.SearchMenuActivity;
-import com.google.firebase.storage.StorageReference;
+import com.example.astonindoor.DestinationSearchList.DestinationListActivity;
 
 import java.util.List;
 
@@ -54,14 +50,14 @@ public class HomePageFrag extends Fragment {
     private androidx.appcompat.widget.SearchView searchView;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private AssetManager assetManager;
-    private StorageReference mStorageRef;
 
     private RecyclerView.LayoutManager rLayoutManager;
     private RecyclerView searchBarList;
     private ImageView mapImage;
     private  String MAP_LINK;
-    private Canvas canvas;;
+    private Canvas canvas;
     AutoCompleteTextView currentPos;
+    Bitmap displayedMap;
 
     public HomePageFrag(){
     }
@@ -73,21 +69,24 @@ public class HomePageFrag extends Fragment {
 
 
 
-        MAP_LINK = "https://firebasestorage.googleapis.com/v0/b/astonindoor.appspot.com/o/1%2FMB%202nd%20Floor%20Rev%20Q-1.jpg?alt=media&token=1f5cfdb0-bccb-40e2-9a27-9c0418e8992c"    ;
        // MAP_LINK = "https://firebasestorage.googleapis.com/v0/b/astonindoor.appspot.com/o/1%2FMB%202nd%20Floor%20Rev%20Q-1.jpg?alt=media&token=1f5cfdb0-bccb-40e2-9a27-9c0418e8992c"    ;
+//       MAP_LINK = "https://firebasestorage.googleapis.com/v0/b/astonindoor.appspot.com/o/3%2FMB%203rd%20Floor%20Rev%20N1024_1.jpg?alt=media&token=ffbb6408-d920-496b-b1c5-efaeed9d30c8"    ;
+        displayedMap = BitmapFactory.decodeResource(getResources(), R.drawable.mb_second_floor).copy(Bitmap.Config.ARGB_8888, true);
         //gpsButton = (ImageButton) findViewById(R.id.TrackMe);
-        goButton = (ImageButton) view.findViewById(R.id.GoButton);
-        startNavigation = (ImageButton) view.findViewById(R.id.CameraButton);
+
+        startNavigation = (ImageButton) view.findViewById(R.id.CurrentPostionButton);
         mapImage = (ImageView) view.findViewById(R.id.tryImage);
         currentPos = (AutoCompleteTextView) view.findViewById(R.id.currentPostion);
+        currentPos.setCompletionHint("Enter your nearest room");
 
         currentRoomViewModel = new ViewModelProvider(this).get(CurrentRoomViewModel.class);
         currentPos.setVisibility(View.INVISIBLE);
 
+        int id = R.drawable.mb_second_floor;
 
-
-        goButton.setVisibility(View.INVISIBLE);
+  //      goButton.setVisibility(View.INVISIBLE);
         startNavigation.setOnClickListener(currentPosTextBox);
+
 
 
         /**
@@ -95,23 +94,33 @@ public class HomePageFrag extends Fragment {
          */
         Glide.with(this)
                 .asBitmap()
-                .load(MAP_LINK)
+                .load(id)
                 .into(new CustomTarget<Bitmap>() {
+                    @SuppressLint("ClickableViewAccessibility")
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         resource = Bitmap.createBitmap(resource);
-                        canvas = new Canvas(resource);;
+                        canvas = new Canvas(resource);
                         mapImage.setImageBitmap(resource);
 
 
+                        mapImage.setOnTouchListener((view, motionEvent) -> {
+
+                            final float x = motionEvent.getX();
+                            final float y = motionEvent.getY();
+                            float lastXAxis = x;
+                            float lastYAxis = y;
+                            System.out.println("X coord ="+ lastXAxis +" " + "Y coord= " + lastYAxis);
+
+                            return true;
+                        });
 
                     }
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
                     }
+
                 });
-
-
 
 
         currentRoomViewModel= new ViewModelProvider(this).get(CurrentRoomViewModel.class);
@@ -133,7 +142,7 @@ public class HomePageFrag extends Fragment {
                         String currentPosition = parent.getItemAtPosition(position).toString();
                         currentRoomViewModel.sendToServer(currentPosition);
 
-                        Intent intent = new Intent(getContext(), SearchMenuActivity.class);
+                        Intent intent = new Intent(getContext(), DestinationListActivity.class);
                         startActivity(intent);
 
                         System.out.println("CurrentPositon " + currentPosition );
@@ -156,41 +165,25 @@ public class HomePageFrag extends Fragment {
 
     }
 
-    private View.OnClickListener searchActivity = new View.OnClickListener() {
+    private final View.OnClickListener searchActivity = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
 
-            Intent intent = new Intent(getActivity(), SearchMenuActivity.class);
+            Intent intent = new Intent(getActivity(), DestinationListActivity.class);
             startActivity(intent);
 
         }
     };
 
 
-    private View.OnClickListener currentPosTextBox = new View.OnClickListener() {
+    private final View.OnClickListener currentPosTextBox = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
             currentPos.setVisibility(View.VISIBLE);
             v.setVisibility(View.GONE);
-//            goButton.setVisibility(View.VISIBLE);
-//            goButton.setOnClickListener(searchActivity);
 
-
-
-            // boolean running = true;
-//            boolean isSelected = Boolean.parseBoolean(currentRoomViewModel.isValid());
-//            System.out.println(isSelected);
-//            while(running) {
-//                if (isSelected) {
-//                    transaction.setReorderingAllowed(true)
-//                            .remove(currentPBox)
-//                            .commit();
-//
-//                    running = false;
-//                }
-//            }
 
 
         }

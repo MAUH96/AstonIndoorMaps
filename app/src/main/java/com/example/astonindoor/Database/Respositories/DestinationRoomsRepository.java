@@ -19,8 +19,8 @@ import retrofit2.Response;
 
 public class DestinationRoomsRepository {
     // private RoomModel users = new ArrayList<>();
-    private MutableLiveData<List<PathModel>> livePathCoordinates = new MutableLiveData<List<PathModel>>();
-    private MutableLiveData<List<RoomModel>> liveRoomNode = new MutableLiveData<List<RoomModel>>();
+    private final MutableLiveData<List<PathModel>> livePathCoordinates = new MutableLiveData<List<PathModel>>();
+    private final MutableLiveData<List<RoomModel>> liveRoomNode = new MutableLiveData<List<RoomModel>>();
     private List<RoomModel> roomList;
     private List<PathModel>pathCoordinates;
 

@@ -1,15 +1,13 @@
 package com.example.astonindoor;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-//import com.example.astonindoor.Camera.CameraIntentActivity;
-//import com.example.astonindoor.Database.AppViewModel;
 
 import com.example.astonindoor.Database.ViewModel.CurrentRoomViewModel;
 
@@ -21,7 +19,6 @@ import java.util.List;
 public class MapsActivity extends AppCompatActivity {
 
     private CurrentRoomViewModel currentRoomViewModel;
-    String navigation;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -30,11 +27,11 @@ public class MapsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-//                .detectLeakedSqlLiteObjects()
-//                .detectLeakedClosableObjects()
-//                .penaltyLog()
-//                .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .build());
        currentRoomViewModel = new ViewModelProvider(this).get(CurrentRoomViewModel.class);
         final ArrayList<String> navValid = new ArrayList<>();
 
@@ -62,6 +59,7 @@ public class MapsActivity extends AppCompatActivity {
 
 
     }
+
 
     @Override
     protected void onStart() {

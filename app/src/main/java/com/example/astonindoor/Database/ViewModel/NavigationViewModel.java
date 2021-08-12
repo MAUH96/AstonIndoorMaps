@@ -5,18 +5,19 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.astonindoor.Database.Models.PathModel;
 import com.example.astonindoor.Database.Respositories.DestinationRoomsRepository;
+import com.example.astonindoor.Database.Respositories.NavigationRepository;
 
 import java.util.List;
 
 public class NavigationViewModel extends ViewModel {
-    private NavigationViewModel roomRepository;
+    private final NavigationRepository navigationRepository;
 
     public NavigationViewModel() {
         super();
-        roomRepository = new NavigationViewModel();
+        navigationRepository = new NavigationRepository();
     }
-    public MutableLiveData<List<PathModel>> getOptimallPath() {
-        return roomRepository.getOptimallPath();
+    public MutableLiveData<List<PathModel>> getOptimalPath() {
+        return navigationRepository.getOptimalPath();
     }
 
 }

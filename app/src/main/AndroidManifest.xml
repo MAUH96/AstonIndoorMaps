@@ -17,6 +17,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
+        android:name="androidx.multidex.MultiDexApplication"
         tools:targetApi="m">
         <activity
             android:name=".MapsActivity"
@@ -30,8 +31,11 @@
             </intent-filter>
         </activity> <!-- <activity android:name=".SearchBar.SearchableActivity" /> -->
         <activity
-            android:name=".DestinationSearchList.SearchMenuActivity"
+            android:name=".DestinationSearchList.DestinationListActivity"
             android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".NextFloorNavActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

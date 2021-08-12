@@ -9,7 +9,7 @@ import com.example.astonindoor.Database.Models.RoomModel;
 import java.util.List;
 
 public class DestinationRoomViewModel extends ViewModel {
-    private DestinationRoomsRepository roomRepository;
+    private final DestinationRoomsRepository roomRepository;
 
     public DestinationRoomViewModel() {
         super();

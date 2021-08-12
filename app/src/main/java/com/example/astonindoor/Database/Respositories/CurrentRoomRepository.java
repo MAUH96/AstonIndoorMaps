@@ -15,9 +15,9 @@ import retrofit2.Response;
 
 public class CurrentRoomRepository {
     // private RoomModel users = new ArrayList<>();
-    private MutableLiveData<List<String>> liveRoomNum = new MutableLiveData<List<String>>();
-    private MutableLiveData<List<String>> isValid= new MutableLiveData<>();
-    private MutableLiveData<String> validationValue= new MutableLiveData<>();
+    private final MutableLiveData<List<String>> liveRoomNum = new MutableLiveData<List<String>>();
+    private final MutableLiveData<List<String>> isValid= new MutableLiveData<>();
+    private final MutableLiveData<String> validationValue= new MutableLiveData<>();
 
 
 

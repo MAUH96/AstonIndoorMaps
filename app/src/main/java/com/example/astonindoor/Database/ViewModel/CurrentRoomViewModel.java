@@ -11,7 +11,7 @@ import java.util.List;
 public class CurrentRoomViewModel extends ViewModel {
 
 
-    private CurrentRoomRepository roomRepository;
+    private final CurrentRoomRepository roomRepository;
 
 
     public CurrentRoomViewModel() {
